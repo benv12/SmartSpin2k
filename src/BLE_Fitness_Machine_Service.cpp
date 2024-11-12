@@ -130,13 +130,13 @@ void BLE_Fitness_Machine_Service::processFTMSWrite() {
       switch ((uint8_t)rxValue[0]) {
         case FitnessMachineControlPointProcedure::RequestControl:
           returnValue[2] = FitnessMachineControlPointResultCode::Success;  // 0x01;
-          rtConfig->watts.setTarget(0);
-          rtConfig->setSimTargetWatts(false);
           logBufLength += snprintf(logBuf + logBufLength, kLogBufCapacity - logBufLength, "-> Control Request");
           ftmsTrainingStatus[1] = FitnessMachineTrainingStatus::Idle;  // 0x01;
           fitnessMachineTrainingStatus->setValue(ftmsTrainingStatus, 2);
           ftmsStatus = {FitnessMachineStatus::StartedOrResumedByUser};
           pCharacteristic->setValue(returnValue, 3);
+          rtConfig->watts.setTarget(0);
+          rtConfig->setSimTargetWatts(false);
           break;
 
         case FitnessMachineControlPointProcedure::Reset: {
@@ -147,6 +147,8 @@ void BLE_Fitness_Machine_Service::processFTMSWrite() {
           ftmsStatus            = {FitnessMachineStatus::Reset};
           fitnessMachineTrainingStatus->setValue(ftmsTrainingStatus, 2);
           pCharacteristic->setValue(returnValue, 3);
+          rtConfig->watts.setTarget(0);
+          rtConfig->setSimTargetWatts(false);
         } break;
 
         case FitnessMachineControlPointProcedure::SetTargetInclination: {
@@ -164,6 +166,8 @@ void BLE_Fitness_Machine_Service::processFTMSWrite() {
           ftmsTrainingStatus[1] = FitnessMachineTrainingStatus::Other;  // 0x00;
           fitnessMachineTrainingStatus->setValue(ftmsTrainingStatus, 2);
           pCharacteristic->setValue(returnValue, 3);
+
+
         } break;
 
         case FitnessMachineControlPointProcedure::SetTargetResistanceLevel: {
@@ -233,6 +237,8 @@ void BLE_Fitness_Machine_Service::processFTMSWrite() {
           ftmsStatus            = {FitnessMachineStatus::StoppedOrPausedByUser};
           ftmsTrainingStatus[1] = FitnessMachineTrainingStatus::Other;  // 0x00;
           fitnessMachineTrainingStatus->setValue(ftmsTrainingStatus, 2);
+          rtConfig->watts.setTarget(0);
+          rtConfig->setSimTargetWatts(false);
 
         } break;
 
