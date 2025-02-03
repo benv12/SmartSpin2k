@@ -891,6 +891,111 @@ void PowerTable::newEntry(PowerBuffer& powerBuffer) {
     return;
   }
 
+
+   
+
+  /*Without testing neighbor
+  // Downvote out of position neighbors and discard entry if it doesn't match the logic of the table
+  TestResults testResults = this->testNeighbors(k, i, targetPosition);
+  if (!(testResults.bottomNeighbor.passedTest && testResults.topNeighbor.passedTest && testResults.rightNeighbor.passedTest && testResults.leftNeighbor.passedTest)) {
+    // test which bit fields didn't match
+    if (!testResults.leftNeighbor.passedTest) {
+      SS2K_LOG(POWERTABLE_LOG_TAG, "Left neighbor failed, Failed position: %d, targetPosition: %d", testResults.rightNeighbor.targetPosition, (int)targetPosition)
+      if(testResults.leftNeighbor.j == k && (testResults.leftNeighbor.targetPosition+5 >= (int)targetPosition && testResults.leftNeighbor.targetPosition-5 <= (int)targetPosition)){ //cadence of the failed neighbor and target position are the same and within a 5 unit range
+    SS2K_LOG(POWERTABLE_LOG_TAG, "Left cadence the same and within range")
+        if(testResults.leftNeighbor.targetPosition >= (int)targetPosition){ //if the cadence is the same and the failed target position is higher than the current position
+        SS2K_LOG(POWERTABLE_LOG_TAG, "Left Target Position is higher than current target position");
+         int moveBy = abs(testResults.leftNeighbor.targetPosition - (int)targetPosition); //get the spaceing to move left right or down
+         SS2K_LOG(POWERTABLE_LOG_TAG, "Calc position %d", (testResults.leftNeighbor.targetPosition-moveBy));
+
+             SS2K_LOG(POWERTABLE_LOG_TAG, "Left neighbor moved down by %d", moveBy)
+          this->tableRow[testResults.leftNeighbor.i].tableEntry[testResults.leftNeighbor.j].targetPosition -= moveBy;
+          
+        }else {
+              this->tableRow[testResults.leftNeighbor.i].tableEntry[testResults.leftNeighbor.j].readings--;
+      SS2K_LOG(POWERTABLE_LOG_TAG, "PT failed Left (%d)(%d)(%d), readings (%d)", testResults.leftNeighbor.i, testResults.leftNeighbor.j, testResults.leftNeighbor.targetPosition,
+               this->tableRow[testResults.leftNeighbor.i].tableEntry[testResults.leftNeighbor.j].readings);
+      }
+      }else {
+              this->tableRow[testResults.leftNeighbor.i].tableEntry[testResults.leftNeighbor.j].readings--;
+      SS2K_LOG(POWERTABLE_LOG_TAG, "PT failed Left (%d)(%d)(%d), readings (%d)", testResults.leftNeighbor.i, testResults.leftNeighbor.j, testResults.leftNeighbor.targetPosition,
+               this->tableRow[testResults.leftNeighbor.i].tableEntry[testResults.leftNeighbor.j].readings);
+      }
+    }
+
+    if (!testResults.rightNeighbor.passedTest) {
+      SS2K_LOG(POWERTABLE_LOG_TAG, "Right neighbor failed, Failed position: %d, targetPosition: %d", testResults.rightNeighbor.targetPosition, (int)targetPosition)
+      if(testResults.rightNeighbor.j == k && (testResults.rightNeighbor.targetPosition+5 >= (int)targetPosition && testResults.rightNeighbor.targetPosition-5 <= (int)targetPosition)){ //cadence of the failed neighbor and target position are the same and within a 5 unit range
+    SS2K_LOG(POWERTABLE_LOG_TAG, "Right cadence the same and within range")
+        if(testResults.rightNeighbor.targetPosition <= (int)targetPosition){ //if the cadence is the same and the failed target position is higher than the current position
+        SS2K_LOG(POWERTABLE_LOG_TAG, "Right position is lower than current position"); 
+         int moveBy = abs(testResults.rightNeighbor.targetPosition - (int)targetPosition); //get the spaceing to move left right or down
+         SS2K_LOG(POWERTABLE_LOG_TAG, "Calc right position %d", (testResults.rightNeighbor.targetPosition+moveBy)); 
+
+             SS2K_LOG(POWERTABLE_LOG_TAG, "Right neighbor moved up by %d", moveBy)
+          this->tableRow[testResults.rightNeighbor.i].tableEntry[testResults.rightNeighbor.j].targetPosition += moveBy;
+          
+        }else {
+              this->tableRow[testResults.rightNeighbor.i].tableEntry[testResults.rightNeighbor.j].readings--;
+      SS2K_LOG(POWERTABLE_LOG_TAG, "PT failed Right (%d)(%d)(%d), readings (%d)", testResults.leftNeighbor.i, testResults.leftNeighbor.j, testResults.leftNeighbor.targetPosition,
+               this->tableRow[testResults.rightNeighbor.i].tableEntry[testResults.rightNeighbor.j].readings);
+      }
+      }else {
+              this->tableRow[testResults.rightNeighbor.i].tableEntry[testResults.rightNeighbor.j].readings--;
+      SS2K_LOG(POWERTABLE_LOG_TAG, "PT failed Right (%d)(%d)(%d), readings (%d)", testResults.leftNeighbor.i, testResults.leftNeighbor.j, testResults.leftNeighbor.targetPosition,
+               this->tableRow[testResults.rightNeighbor.i].tableEntry[testResults.rightNeighbor.j].readings);
+      }
+    }
+    if (!testResults.topNeighbor.passedTest) {
+      SS2K_LOG(POWERTABLE_LOG_TAG, "Top neighbor failed, Failed position: %d, targetPosition: %d", testResults.topNeighbor.targetPosition, (int)targetPosition)
+      if(testResults.topNeighbor.j == k && (testResults.topNeighbor.targetPosition+5 >= (int)targetPosition && testResults.topNeighbor.targetPosition-5 <= (int)targetPosition)){ //cadence of the failed neighbor and target position are the same and within a 5 unit range
+    SS2K_LOG(POWERTABLE_LOG_TAG, "Top cadence the same and within range")
+        if(testResults.topNeighbor.i <= i){ //if the cadence is the same and the failed neighbors watts is less then the current postions watts
+        SS2K_LOG(POWERTABLE_LOG_TAG, "Watts are lower than current watts");
+         int moveBy = abs(testResults.topNeighbor.i - i); //get the spaceing to move left right or down
+         SS2K_LOG(POWERTABLE_LOG_TAG, "Top Calc: %d", (testResults.topNeighbor.i + moveBy));
+
+             SS2K_LOG(POWERTABLE_LOG_TAG, "Top neighbor moved right by %d", moveBy)
+          this->tableRow[testResults.topNeighbor.i+moveBy].tableEntry[testResults.topNeighbor.j].targetPosition = targetPosition;
+          
+        }else {
+              this->tableRow[testResults.leftNeighbor.i].tableEntry[testResults.leftNeighbor.j].readings--;
+      SS2K_LOG(POWERTABLE_LOG_TAG, "PT failed Left (%d)(%d)(%d), readings (%d)", testResults.leftNeighbor.i, testResults.leftNeighbor.j, testResults.leftNeighbor.targetPosition,
+               this->tableRow[testResults.leftNeighbor.i].tableEntry[testResults.leftNeighbor.j].readings);
+      }
+      }else {
+              this->tableRow[testResults.leftNeighbor.i].tableEntry[testResults.leftNeighbor.j].readings--;
+      SS2K_LOG(POWERTABLE_LOG_TAG, "PT failed Left (%d)(%d)(%d), readings (%d)", testResults.leftNeighbor.i, testResults.leftNeighbor.j, testResults.leftNeighbor.targetPosition,
+               this->tableRow[testResults.leftNeighbor.i].tableEntry[testResults.leftNeighbor.j].readings);
+      }
+    }
+    if (!testResults.bottomNeighbor.passedTest) {
+      SS2K_LOG(POWERTABLE_LOG_TAG, "Bottom neighbor failed, Failed position: %d, targetPosition: %d", testResults.bottomNeighbor.targetPosition, (int)targetPosition)
+      if(testResults.bottomNeighbor.j == k && (testResults.bottomNeighbor.targetPosition+5 >= (int)targetPosition && testResults.bottomNeighbor.targetPosition-5 <= (int)targetPosition)){ //cadence of the failed neighbor and target position are the same and within a 5 unit range
+        SS2K_LOG(POWERTABLE_LOG_TAG, "Bottom cadence the same and within range")
+        if(testResults.bottomNeighbor.i >= i){ //if the cadence is the same and the failed neighbors watts is less then the current postions watts
+        SS2K_LOG(POWERTABLE_LOG_TAG, "Bottom watts are higher than current watts"); 
+         int moveBy = abs(testResults.bottomNeighbor.i - i); //get the spaceing to move left right or down
+         SS2K_LOG(POWERTABLE_LOG_TAG, "Calc position: %d", (testResults.bottomNeighbor.i-moveBy));
+
+             SS2K_LOG(POWERTABLE_LOG_TAG, "Top neighbor moved right by %d", moveBy)
+          this->tableRow[testResults.bottomNeighbor.i+moveBy].tableEntry[testResults.bottomNeighbor.j].targetPosition = targetPosition;
+          
+        }else {
+              this->tableRow[testResults.bottomNeighbor.i].tableEntry[testResults.bottomNeighbor.j].readings--;
+      SS2K_LOG(POWERTABLE_LOG_TAG, "PT failed Left (%d)(%d)(%d), readings (%d)", testResults.bottomNeighbor.i, testResults.bottomNeighbor.j, testResults.bottomNeighbor.targetPosition,
+               this->tableRow[testResults.bottomNeighbor.i].tableEntry[testResults.bottomNeighbor.j].readings);
+      }
+      }else {
+              this->tableRow[testResults.bottomNeighbor.i].tableEntry[testResults.bottomNeighbor.j].readings--;
+      SS2K_LOG(POWERTABLE_LOG_TAG, "PT failed Left (%d)(%d)(%d), readings (%d)", testResults.bottomNeighbor.i, testResults.bottomNeighbor.j, testResults.bottomNeighbor.targetPosition,
+               this->tableRow[testResults.bottomNeighbor.i].tableEntry[testResults.bottomNeighbor.j].readings);
+      }
+    }
+    return;
+  }
+  */
+
   // Update or create a new entry
   if (this->tableRow[k].tableEntry[i].readings == 0) {  // if first reading in this entry
     this->tableRow[k].tableEntry[i].targetPosition = targetPosition;
