@@ -796,12 +796,13 @@ void PowerTable::newEntry(PowerBuffer& powerBuffer) {
   if (!(testResults.bottomNeighbor.passedTest && testResults.topNeighbor.passedTest && testResults.rightNeighbor.passedTest && testResults.leftNeighbor.passedTest)) {
     // test which bit fields didn't match
     if (!testResults.leftNeighbor.passedTest) {
-      if(testResults.leftNeighbor.i == k && (testResults.leftNeighbor.targetPosition <= targetPosition+5 && testResults.leftNeighbor.targetPosition >= targetPosition)){
+      if(testResults.leftNeighbor.i == k && (testResults.leftNeighbor.targetPosition <= targetPosition+30 && testResults.leftNeighbor.targetPosition >= targetPosition)){
         SS2K_LOG(POWERTABLE_LOG_TAG, "Cadence is the same and target pos is within range");
-        float avgValue = (targetPosition + float(testResults.leftNeighbor.targetPosition)) / 2.0f; 
-        float newValue = targetPosition - (avgValue - targetPosition); //this is the possible new value for the neighbor 
+        SS2K_LOG(POWERTABLE_LOG_TAG, "Range: %f to %d", targetPosition, testResults.leftNeighbor.targetPosition);
+        int avgValue = (targetPosition + testResults.leftNeighbor.targetPosition) / 2; 
+        int newValue = targetPosition - (avgValue - targetPosition); //this is the possible new value for the neighbor 
         if(this->testNeighbors(testResults.leftNeighbor.i, testResults.leftNeighbor.j, newValue).allNeighborsPassed){
-          SS2K_LOG(POWERTABLE_LOG_TAG, "New Value is valid, %f", newValue); 
+          SS2K_LOG(POWERTABLE_LOG_TAG, "New Value is valid, %d", newValue); 
           this->enterData(testResults.leftNeighbor.i, testResults.leftNeighbor.j, newValue); 
         }else {
            this->tableRow[testResults.leftNeighbor.i].tableEntry[testResults.leftNeighbor.j].readings--;
@@ -816,12 +817,13 @@ void PowerTable::newEntry(PowerBuffer& powerBuffer) {
     }
 
     if (!testResults.rightNeighbor.passedTest) {
-      if(testResults.rightNeighbor.i == k && (testResults.rightNeighbor.targetPosition >= targetPosition-5 && testResults.rightNeighbor.targetPosition <= targetPosition)){
+      if(testResults.rightNeighbor.i == k && (testResults.rightNeighbor.targetPosition >= targetPosition-30 && testResults.rightNeighbor.targetPosition <= targetPosition)){
         SS2K_LOG(POWERTABLE_LOG_TAG, "Cadence is the same and target pos is within range");
-        float avgValue = (targetPosition + float(testResults.rightNeighbor.targetPosition)) / 2.0f; 
-        float newValue = targetPosition + (avgValue - targetPosition); //this is the possible new value for the neighbor
+        SS2K_LOG(POWERTABLE_LOG_TAG, "Range: %f to %d", targetPosition, testResults.rightNeighbor.targetPosition);
+        int avgValue = (targetPosition + testResults.rightNeighbor.targetPosition) / 2; 
+        int newValue = targetPosition + (avgValue - targetPosition); //this is the possible new value for the neighbor
         if(this->testNeighbors(testResults.rightNeighbor.i, testResults.rightNeighbor.j, newValue).allNeighborsPassed){
-           SS2K_LOG(POWERTABLE_LOG_TAG, "New Value is valid, %f", newValue); 
+           SS2K_LOG(POWERTABLE_LOG_TAG, "New Value is valid, %d", newValue); 
           this->enterData(testResults.rightNeighbor.i, testResults.rightNeighbor.j, newValue); 
         } else {
              this->tableRow[testResults.rightNeighbor.i].tableEntry[testResults.rightNeighbor.j].readings--;
@@ -836,12 +838,13 @@ void PowerTable::newEntry(PowerBuffer& powerBuffer) {
     }
 
     if (!testResults.topNeighbor.passedTest) {
-      if(testResults.topNeighbor.j == i && (testResults.topNeighbor.targetPosition >= targetPosition-5 && testResults.topNeighbor.targetPosition <= targetPosition)){
+      if(testResults.topNeighbor.j == i && (testResults.topNeighbor.targetPosition >= targetPosition-30 && testResults.topNeighbor.targetPosition <= targetPosition)){
          SS2K_LOG(POWERTABLE_LOG_TAG, "Cadence is the same and target pos is within range");
-        float avgValue = (targetPosition + float(testResults.bottomNeighbor.targetPosition)) / 2.0f; 
-        float newValue = targetPosition + (avgValue - targetPosition); //this is the possible new value for the neighbor
+         SS2K_LOG(POWERTABLE_LOG_TAG, "Range: %f to %d", targetPosition, testResults.topNeighbor.targetPosition);
+        int avgValue = (targetPosition + testResults.bottomNeighbor.targetPosition) / 2; 
+        int newValue = targetPosition + (avgValue - targetPosition); //this is the possible new value for the neighbor
         if(this->testNeighbors(testResults.topNeighbor.i, testResults.topNeighbor.j, newValue).allNeighborsPassed){
-          SS2K_LOG(POWERTABLE_LOG_TAG, "New Value is valid, %f", newValue); 
+          SS2K_LOG(POWERTABLE_LOG_TAG, "New Value is valid, %d", newValue); 
           this->enterData(testResults.topNeighbor.i, testResults.topNeighbor.j, newValue); 
         }else {
           this->tableRow[testResults.topNeighbor.i].tableEntry[testResults.topNeighbor.j].readings--;
@@ -856,12 +859,13 @@ void PowerTable::newEntry(PowerBuffer& powerBuffer) {
     }
 
     if (!testResults.bottomNeighbor.passedTest) { 
-      if(testResults.bottomNeighbor.j == i && (testResults.bottomNeighbor.targetPosition <= targetPosition+5 && testResults.bottomNeighbor.targetPosition >= targetPosition)){
+      if(testResults.bottomNeighbor.j == i && (testResults.bottomNeighbor.targetPosition <= targetPosition+30 && testResults.bottomNeighbor.targetPosition >= targetPosition)){
          SS2K_LOG(POWERTABLE_LOG_TAG, "Cadence is the same and target pos is within range");
-        float avgValue = (targetPosition + float(testResults.bottomNeighbor.targetPosition)) / 2.0f; 
-        float newValue = targetPosition + (avgValue - targetPosition); //this is the possible new value for the neighbor
+         SS2K_LOG(POWERTABLE_LOG_TAG, "Range: %f to %d", targetPosition, testResults.bottomNeighbor.targetPosition);
+        int avgValue = (targetPosition + testResults.bottomNeighbor.targetPosition) / 2; 
+        int newValue = targetPosition + (avgValue - targetPosition); //this is the possible new value for the neighbor
         if(this->testNeighbors(testResults.bottomNeighbor.i, testResults.bottomNeighbor.j, newValue).allNeighborsPassed){
-           SS2K_LOG(POWERTABLE_LOG_TAG, "New Value is valid, %f", newValue); 
+           SS2K_LOG(POWERTABLE_LOG_TAG, "New Value is valid, %d", newValue); 
           this->enterData(testResults.bottomNeighbor.i, testResults.bottomNeighbor.j, newValue); 
         }else {
             this->tableRow[testResults.bottomNeighbor.i].tableEntry[testResults.bottomNeighbor.j].readings--;
@@ -908,7 +912,7 @@ void PowerTable::newEntry(PowerBuffer& powerBuffer) {
   BLE_ss2kCustomCharacteristic::notify(0x27, k);
 }
 
-void PowerTable::enterData(int i, int j, float pos){
+void PowerTable::enterData(int i, int j, int pos){
    // Update or create a new entry
   if (this->tableRow[i].tableEntry[j].readings == 0) {  // if first reading in this entry
     this->tableRow[i].tableEntry[j].targetPosition = pos;
