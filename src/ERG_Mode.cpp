@@ -806,7 +806,7 @@ void PowerTable::newEntry(PowerBuffer& powerBuffer) {
           this->enterData(testResults.leftNeighbor.i, testResults.leftNeighbor.j, newValue); 
         }else {
            this->tableRow[testResults.leftNeighbor.i].tableEntry[testResults.leftNeighbor.j].readings--;
-            SS2K_LOG(POWERTABLE_LOG_TAG, "PT failed with new Value (%d)(%d)(%f), readings (%d)", testResults.leftNeighbor.i, testResults.leftNeighbor.j, newValue,
+            SS2K_LOG(POWERTABLE_LOG_TAG, "PT failed with new Value (%d)(%d)(%d), readings (%d)", testResults.leftNeighbor.i, testResults.leftNeighbor.j, newValue,
             this->tableRow[testResults.leftNeighbor.i].tableEntry[testResults.leftNeighbor.j].readings);
         }
       }else{
@@ -827,7 +827,7 @@ void PowerTable::newEntry(PowerBuffer& powerBuffer) {
           this->enterData(testResults.rightNeighbor.i, testResults.rightNeighbor.j, newValue); 
         } else {
              this->tableRow[testResults.rightNeighbor.i].tableEntry[testResults.rightNeighbor.j].readings--;
-      SS2K_LOG(POWERTABLE_LOG_TAG, "PT failed Right with new value(%d)(%d)(%f), readings (%d)", testResults.rightNeighbor.i, testResults.rightNeighbor.j,
+      SS2K_LOG(POWERTABLE_LOG_TAG, "PT failed Right with new value(%d)(%d)(%d), readings (%d)", testResults.rightNeighbor.i, testResults.rightNeighbor.j,
                newValue, this->tableRow[testResults.rightNeighbor.i].tableEntry[testResults.rightNeighbor.j].readings);
         }
       }else {
@@ -848,7 +848,7 @@ void PowerTable::newEntry(PowerBuffer& powerBuffer) {
           this->enterData(testResults.topNeighbor.i, testResults.topNeighbor.j, newValue); 
         }else {
           this->tableRow[testResults.topNeighbor.i].tableEntry[testResults.topNeighbor.j].readings--;
-          SS2K_LOG(POWERTABLE_LOG_TAG, "PT failed Top with new Value (%d)(%d)(%f), readings (%d)", testResults.topNeighbor.i, testResults.topNeighbor.j, newValue,
+          SS2K_LOG(POWERTABLE_LOG_TAG, "PT failed Top with new Value (%d)(%d)(%d), readings (%d)", testResults.topNeighbor.i, testResults.topNeighbor.j, newValue,
           this->tableRow[testResults.topNeighbor.i].tableEntry[testResults.topNeighbor.j].readings);
         }
       }else{
@@ -863,13 +863,13 @@ void PowerTable::newEntry(PowerBuffer& powerBuffer) {
          SS2K_LOG(POWERTABLE_LOG_TAG, "Cadence is the same and target pos is within range");
          SS2K_LOG(POWERTABLE_LOG_TAG, "Range: %f to %d", targetPosition, testResults.bottomNeighbor.targetPosition);
         int avgValue = (targetPosition + testResults.bottomNeighbor.targetPosition) / 2; 
-        int newValue = targetPosition + (avgValue - targetPosition); //this is the possible new value for the neighbor
+        int newValue = targetPosition - (avgValue - targetPosition); //this is the possible new value for the neighbor
         if(this->testNeighbors(testResults.bottomNeighbor.i, testResults.bottomNeighbor.j, newValue).allNeighborsPassed){
            SS2K_LOG(POWERTABLE_LOG_TAG, "New Value is valid, %d", newValue); 
           this->enterData(testResults.bottomNeighbor.i, testResults.bottomNeighbor.j, newValue); 
         }else {
             this->tableRow[testResults.bottomNeighbor.i].tableEntry[testResults.bottomNeighbor.j].readings--;
-      SS2K_LOG(POWERTABLE_LOG_TAG, "PT failed Bottom with new Value (%d)(%d)(%f), readings (%d)", testResults.bottomNeighbor.i, testResults.bottomNeighbor.j,
+      SS2K_LOG(POWERTABLE_LOG_TAG, "PT failed Bottom with new Value (%d)(%d)(%d), readings (%d)", testResults.bottomNeighbor.i, testResults.bottomNeighbor.j,
                newValue, this->tableRow[testResults.bottomNeighbor.i].tableEntry[testResults.bottomNeighbor.j].readings);
         }
       }else{
