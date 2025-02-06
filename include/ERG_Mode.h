@@ -105,6 +105,8 @@ class PowerTable {
   // Catalogs a new entry into the power table.
   void newEntry(PowerBuffer& powerBuffer);
 
+  void enterData(int i, int j, float pos); 
+
   // returns incline for wattTarget. Null if not found.
   int32_t lookup(int watts, int cad);
 
