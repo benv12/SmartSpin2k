@@ -801,23 +801,32 @@ void PowerTable::newEntry(PowerBuffer& powerBuffer) {
 
         int avgPosition = (targetPosition + testResults.leftNeighbor.targetPosition) / 2; //calculate the average 
         SS2K_LOG(POWERTABLE_LOG_TAG, "Avg position: %d", avgPosition);
+        int count = 0; 
 
         if(this->testNeighbors(testResults.leftNeighbor.i, testResults.leftNeighbor.j, targetPosition).allNeighborsPassed){ //check if the current position moved left is valid
           SS2K_LOG(POWERTABLE_LOG_TAG, "Current Position moved left was valid! Current position: %f", targetPosition); 
           this->enterData(testResults.leftNeighbor.i, testResults.leftNeighbor.j, targetPosition); //enter the data 
+          count++; 
         } 
 
         if (this->testNeighbors(k, i, avgPosition).allNeighborsPassed){ //checks if the avg position with the current watts and cadence is valid
           SS2K_LOG(POWERTABLE_LOG_TAG, "Avg postion is valid with current cadence and watts! Avg position: %d", avgPosition); 
           this->enterData(k, i, avgPosition); //enter the data 
+          count++; 
         } 
 
         if(this->testNeighbors(testResults.rightNeighbor.i, testResults.rightNeighbor.j, testResults.leftNeighbor.targetPosition).allNeighborsPassed){ //checks if the failed nighbor is valid with the right neighbors cadence and watts
           SS2K_LOG(POWERTABLE_LOG_TAG, "Left Neighbors position was valid with Right Neighbors cadence and watts! Left Neighbor Position: %d", testResults.leftNeighbor.targetPosition); 
           this->enterData(testResults.rightNeighbor.i, testResults.rightNeighbor.j, testResults.leftNeighbor.targetPosition); 
+          count++; 
         }
 
-        return; 
+        if(count==0){
+          this->tableRow[testResults.leftNeighbor.i].tableEntry[testResults.leftNeighbor.j].readings--;
+          SS2K_LOG(POWERTABLE_LOG_TAG, "PT failed Left (%d)(%d)(%f), readings (%d)", testResults.leftNeighbor.i, testResults.leftNeighbor.j, testResults.leftNeighbor.targetPosition,
+          this->tableRow[testResults.leftNeighbor.i].tableEntry[testResults.leftNeighbor.j].readings);
+        }
+        
       } else { //if not we still get rid of the reading 
       this->tableRow[testResults.leftNeighbor.i].tableEntry[testResults.leftNeighbor.j].readings--;
       SS2K_LOG(POWERTABLE_LOG_TAG, "PT failed Left (%d)(%d)(%f), readings (%d)", testResults.leftNeighbor.i, testResults.leftNeighbor.j, testResults.leftNeighbor.targetPosition,
@@ -830,23 +839,32 @@ void PowerTable::newEntry(PowerBuffer& powerBuffer) {
 
         int avgPosition = (targetPosition + testResults.rightNeighbor.targetPosition) / 2; 
         SS2K_LOG(POWERTABLE_LOG_TAG, "Avg position: %d", avgPosition);
+        int count = 0; 
        
         if (this->testNeighbors(testResults.rightNeighbor.i, testResults.rightNeighbor.j, targetPosition).allNeighborsPassed){
           SS2K_LOG(POWERTABLE_LOG_TAG, "Current Position moved right was valid! Current position: %f", targetPosition); 
           this->enterData(testResults.rightNeighbor.i, testResults.rightNeighbor.j, targetPosition); 
+          count++; 
         } 
 
         if(this->testNeighbors(k, i, avgPosition).allNeighborsPassed){
           SS2K_LOG(POWERTABLE_LOG_TAG, "Avg postion is valid with current cadence and watts! Avg position: %d", avgPosition); 
           this->enterData(k, i, avgPosition); 
+          count++; 
         } 
 
         if(this->testNeighbors(testResults.leftNeighbor.i, testResults.leftNeighbor.j, testResults.rightNeighbor.targetPosition).allNeighborsPassed){
           SS2K_LOG(POWERTABLE_LOG_TAG, "Right Neighbors position was valid with Left Neighbors cadence and watts! Right Neighbor Position: %d", testResults.rightNeighbor.targetPosition); 
           this->enterData(testResults.leftNeighbor.i, testResults.leftNeighbor.j, testResults.rightNeighbor.targetPosition); 
+          count++; 
         }
 
-        return; 
+        if(count==0){
+          this->tableRow[testResults.rightNeighbor.i].tableEntry[testResults.rightNeighbor.j].readings--;
+          SS2K_LOG(POWERTABLE_LOG_TAG, "PT failed Right (%d)(%d)(%d), readings (%d)", testResults.rightNeighbor.i, testResults.rightNeighbor.j,
+                   testResults.rightNeighbor.targetPosition, this->tableRow[testResults.rightNeighbor.i].tableEntry[testResults.rightNeighbor.j].readings);
+        }
+
       } else {
         this->tableRow[testResults.rightNeighbor.i].tableEntry[testResults.rightNeighbor.j].readings--;
       SS2K_LOG(POWERTABLE_LOG_TAG, "PT failed Right (%d)(%d)(%d), readings (%d)", testResults.rightNeighbor.i, testResults.rightNeighbor.j,
@@ -859,23 +877,32 @@ void PowerTable::newEntry(PowerBuffer& powerBuffer) {
 
         int avgPosition = (targetPosition + testResults.topNeighbor.targetPosition) / 2; 
         SS2K_LOG(POWERTABLE_LOG_TAG, "Avg position: %d", avgPosition);
+        int count = 0; 
 
         if (this->testNeighbors(testResults.topNeighbor.i, testResults.topNeighbor.j, targetPosition).allNeighborsPassed){
           SS2K_LOG(POWERTABLE_LOG_TAG, "Current Position moved up was valid! Current position: %f", targetPosition); 
           this->enterData(testResults.topNeighbor.i, testResults.topNeighbor.j, targetPosition); 
+          count++; 
         } 
 
         if(this->testNeighbors(k, i, avgPosition).allNeighborsPassed){
           SS2K_LOG(POWERTABLE_LOG_TAG, "Avg postion is valid with current cadence and watts! Avg position: %d", avgPosition);  
           this->enterData(k, i, avgPosition);
+          count++; 
         }
 
         if(this->testNeighbors(testResults.bottomNeighbor.i, testResults.bottomNeighbor.j, testResults.topNeighbor.targetPosition).allNeighborsPassed){
           SS2K_LOG(POWERTABLE_LOG_TAG, "Top Neighbors position was valid with Bottom Neighbors cadence and watts! Top Neighbor Position: %d", testResults.topNeighbor.targetPosition); 
           this->enterData(testResults.bottomNeighbor.i, testResults.bottomNeighbor.j, testResults.topNeighbor.targetPosition); 
+          count++; 
         }
 
-        return; 
+        if(count==0){
+          this->tableRow[testResults.bottomNeighbor.i].tableEntry[testResults.bottomNeighbor.j].readings--;
+          SS2K_LOG(POWERTABLE_LOG_TAG, "PT failed Bottom (%d)(%d)(%d), readings (%d)", testResults.bottomNeighbor.i, testResults.bottomNeighbor.j,
+                   testResults.bottomNeighbor.targetPosition, this->tableRow[testResults.bottomNeighbor.i].tableEntry[testResults.bottomNeighbor.j].readings);
+        }
+
       } else {
          this->tableRow[testResults.bottomNeighbor.i].tableEntry[testResults.bottomNeighbor.j].readings--;
       SS2K_LOG(POWERTABLE_LOG_TAG, "PT failed Bottom (%d)(%d)(%d), readings (%d)", testResults.bottomNeighbor.i, testResults.bottomNeighbor.j,
@@ -888,23 +915,32 @@ void PowerTable::newEntry(PowerBuffer& powerBuffer) {
 
         int avgPosition = (targetPosition + testResults.bottomNeighbor.targetPosition) / 2; 
         SS2K_LOG(POWERTABLE_LOG_TAG, "Avg position: %d", avgPosition);
+        int count = 0; 
 
         if (this->testNeighbors(testResults.bottomNeighbor.i, testResults.bottomNeighbor.j, targetPosition).allNeighborsPassed){
           SS2K_LOG(POWERTABLE_LOG_TAG, "Current Position moved up was valid! Current position: %f", targetPosition); 
           this->enterData(testResults.bottomNeighbor.i, testResults.bottomNeighbor.j, targetPosition);  
+          count++; 
         } 
         
         if(this->testNeighbors(k, i, avgPosition).allNeighborsPassed){
           SS2K_LOG(POWERTABLE_LOG_TAG, "Avg postion is valid with current cadence and watts! Avg position: %d", avgPosition);  
           this->enterData(k, i, avgPosition);
+          count++; 
         } 
 
         if(this->testNeighbors(testResults.topNeighbor.i, testResults.topNeighbor.j, testResults.bottomNeighbor.targetPosition).allNeighborsPassed){
           SS2K_LOG(POWERTABLE_LOG_TAG, "Bottom Neighbors position was valid with Top Neighbors cadence and watts! Bottom Neighbor Position: %d", testResults.topNeighbor.targetPosition); 
           this->enterData(testResults.topNeighbor.i, testResults.topNeighbor.j, testResults.bottomNeighbor.targetPosition);
+          count++; 
         }
-        
-        return; 
+
+        if(count==0){
+          this->tableRow[testResults.bottomNeighbor.i].tableEntry[testResults.bottomNeighbor.j].readings--;
+          SS2K_LOG(POWERTABLE_LOG_TAG, "PT failed Bottom (%d)(%d)(%d), readings (%d)", testResults.bottomNeighbor.i, testResults.bottomNeighbor.j,
+          testResults.bottomNeighbor.targetPosition, this->tableRow[testResults.bottomNeighbor.i].tableEntry[testResults.bottomNeighbor.j].readings);
+        }
+
       } else {
         this->tableRow[testResults.bottomNeighbor.i].tableEntry[testResults.bottomNeighbor.j].readings--;
         SS2K_LOG(POWERTABLE_LOG_TAG, "PT failed Bottom (%d)(%d)(%d), readings (%d)", testResults.bottomNeighbor.i, testResults.bottomNeighbor.j,
@@ -914,23 +950,22 @@ void PowerTable::newEntry(PowerBuffer& powerBuffer) {
     return;
   }
 
-  // Update or create a new entry
-  if (this->tableRow[k].tableEntry[i].readings == 0) {  // if first reading in this entry
-    this->tableRow[k].tableEntry[i].targetPosition = targetPosition;
-    SS2K_LOG(POWERTABLE_LOG_TAG, "New entry recorded (%d)(%d)(%d)", k, i, this->tableRow[k].tableEntry[i].targetPosition);
-  } else {  // Average and update the readings.
-    this->tableRow[k].tableEntry[i].targetPosition =
-        (targetPosition + (this->tableRow[k].tableEntry[i].targetPosition * this->tableRow[k].tableEntry[i].readings)) / (this->tableRow[k].tableEntry[i].readings + 1.0);
-    SS2K_LOG(POWERTABLE_LOG_TAG, "Existing entry averaged (%d)(%d)(%d), readings(%d)", k, i, this->tableRow[k].tableEntry[i].targetPosition,
-             this->tableRow[k].tableEntry[i].readings);
-    if (this->tableRow[k].tableEntry[i].readings > POWER_SAMPLES * 2) {
-      this->tableRow[k].tableEntry[i].readings = POWER_SAMPLES * 2;  // keep from diluting recent readings too far.
-    }
-  }
-  this->tableRow[k].tableEntry[i].readings++;
+  // // Update or create a new entry
+  // if (this->tableRow[k].tableEntry[i].readings == 0) {  // if first reading in this entry
+  //   this->tableRow[k].tableEntry[i].targetPosition = targetPosition;
+  //   SS2K_LOG(POWERTABLE_LOG_TAG, "New entry recorded (%d)(%d)(%d)", k, i, this->tableRow[k].tableEntry[i].targetPosition);
+  // } else {  // Average and update the readings.
+  //   this->tableRow[k].tableEntry[i].targetPosition =
+  //       (targetPosition + (this->tableRow[k].tableEntry[i].targetPosition * this->tableRow[k].tableEntry[i].readings)) / (this->tableRow[k].tableEntry[i].readings + 1.0);
+  //   SS2K_LOG(POWERTABLE_LOG_TAG, "Existing entry averaged (%d)(%d)(%d), readings(%d)", k, i, this->tableRow[k].tableEntry[i].targetPosition,
+  //            this->tableRow[k].tableEntry[i].readings);
+  //   if (this->tableRow[k].tableEntry[i].readings > POWER_SAMPLES * 2) {
+  //     this->tableRow[k].tableEntry[i].readings = POWER_SAMPLES * 2;  // keep from diluting recent readings too far.
+  //   }
+  // }
+  // this->tableRow[k].tableEntry[i].readings++;
 
-  //or
-  //this->enterData(k, i, (int)targetPosition);
+  this->enterData(k, i, (int)targetPosition);
 
   // Attempt to fill the table with calculated data...
   if (this->getNumEntries() > 4) {
