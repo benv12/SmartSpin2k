@@ -138,6 +138,37 @@
             </div>
           </div>
         </div>
+
+         <!-- Position Simulation -->
+         <div class="setting-group">
+          <div class="setting-header">
+            <h2>Simulate Target Position</h2>
+            <label class="switch">
+              <input type="checkbox" id="posOutput" onchange="togglePosCheckbox(this,true)">
+              <span class="slider"></span>
+            </label>
+          </div>
+          <div class="sim-control" id="posControls">
+            <div class="slider-group">
+              <div class="value-display">
+                <span id="posValue" class="gear-value">0</span><span>POS</span>
+              </div>
+              <div style="display: flex; align-items: center; gap: 0.25rem; width: 100%; box-sizing: border-box;">
+                <button type="button" class="adjust-button" onclick="incrementSlider('posSlider', -1)">-</button>
+                <input type="range" id="posSlider" min="0" max="280" value="0" step="1" onchange="updateSlider('posSlider')" class="slider-container">
+                <button type="button" class="adjust-button" onclick="incrementSlider('posSlider', 1)">+</button>
+              </div>
+            </div>
+            <div class="toggle-group" style="margin-top: 0.5rem;">
+              <span>Auto Update</span>
+              <label class="switch">
+                <input type="checkbox" id="autoUpdateCadence" onclick="autoUpdateClick('posSlider', 3)">
+                <span class="slider"></span>
+              </label>
+            </div>
+          </div>
+        </div>
+
       </div>
     </main>
   </div>
@@ -173,6 +204,15 @@
       }
     }
 
+    function togglePosCheckbox(element, updateServer) {
+      document.getElementById('posControls').style.display = element.checked ? 'block' : 'none';
+
+      if (updateServer) {
+        fetch('/posSlider?value=' + (element.checked ? 'enable' : 'disable'), { method: 'GET' })
+          .catch(error => console.error('Error:', error));
+      }
+    }
+
     function incrementSlider(sliderId, amount) {
       const slider = document.getElementById(sliderId);
       const currentValue = parseInt(slider.value);
@@ -192,6 +232,7 @@
         case 'wattsSlider': endpoint = '/wattsslider'; break;
         case 'cadSlider': endpoint = '/cadslider'; break;
         case 'targetWattsSlider': endpoint = '/targetwattsslider'; break;
+        case 'posSlider' : endpoint = '/posSlider'; break; 
       }
       
       fetch(endpoint + '?value=' + value, { method: 'GET' })
@@ -254,6 +295,12 @@
           document.getElementById("targetWattsSlider").value = data.targetWatts || 0;
           document.getElementById("targetWattsOutput").checked = data.simTargetWatts;
           document.getElementById("targetWattsSlider").disabled = !data.simTargetWatts;
+
+          // Update target position
+          document.getElementById("posValue").innerHTML = data.cad || 0;
+          document.getElementById("posSlider").value = data.cad || 0;
+          document.getElementById("posOutput").checked = data.simCad;
+          document.getElementById('posControls').style.display = data.simCad ? 'block' : 'none';
           
           if (!data.simTargetWatts) {
             document.getElementById("targetWattsValue").classList.add("disabled");

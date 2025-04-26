@@ -73,6 +73,7 @@ class RuntimeParameters {
   Measurement hr_batt;
   Measurement cad;
   Measurement resistance;
+  Measurement pos; 
 
   void setTargetIncline(float inc) { targetIncline = inc; }
   float getTargetIncline() { return targetIncline; }

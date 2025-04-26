@@ -257,6 +257,23 @@ void HTTP_Server::start() {
     }
   });
 
+  server.on("/posSlider", []() {
+    String value = server.arg("value");
+    if (value == "enable") {
+      rtConfig->pos.setSimulate(true);
+      server.send(200, "text/plain", "OK");
+      SS2K_LOG(HTTP_SERVER_LOG_TAG, "POS Simulator turned on");
+    } else if (value == "disable") {
+      rtConfig->pos.setSimulate(false);
+      server.send(200, "text/plain", "OK");
+      SS2K_LOG(HTTP_SERVER_LOG_TAG, "POS Simulator turned off");
+    } else {
+      rtConfig->pos.setValue(value.toInt());
+      SS2K_LOG(HTTP_SERVER_LOG_TAG, "CAD is now: %d", rtConfig->pos.getValue());
+      server.send(200, "text/plain", "OK");
+    }
+  });
+
   server.on("/targetwattsslider", []() {
     String value = server.arg("value");
     if (value == "enable") {

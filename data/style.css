@@ -60,7 +60,7 @@ nav a:hover{text-decoration:underline}
 .setting-group{margin-bottom:1.5rem;background:var(--bg-overlay);border-radius:6px;padding:0.75rem;box-shadow:var(--shadow-sm);border:1px solid var(--border);overflow:hidden;box-sizing:border-box}
 .setting-group input[type="password"],.setting-group input[type="text"]{width:100%;padding:.75rem;background:rgba(255,255,255,.219);border:1px solid rgba(255,255,255,.2);border-radius:var(--radius-sm);color:var(--text);font-size:1rem;box-sizing:border-box}
 .slider-container{flex:1;display:flex;flex-direction:column;align-items:center;gap:.25rem;width:100%;max-width:260px;margin:0 auto;box-sizing:border-box}
-.slider-container input[type="range"]{width:100%;max-width:100%}
+.slider-container input[type="range"]{width:100%;max-width:100%;}
 .value-display{display:flex;align-items:center;justify-content:center;margin-bottom:0.5rem}
 .value-display span{margin-left:10px}
 .adjust-button{width:36px;height:36px;border:none;background:#03254c;color:var(--text);border-radius:50%;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;transition:background .2s;flex-shrink:0}
